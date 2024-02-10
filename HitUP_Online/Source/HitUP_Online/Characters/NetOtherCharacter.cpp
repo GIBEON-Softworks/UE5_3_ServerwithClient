@@ -50,7 +50,7 @@ void ANetOtherCharacter::BeginPlay()
 {
 	Super::BeginPlay();	
 
-	// AIController를 스폰합니다.
+	// AIController Spawn
 	MyAIController = GetWorld()->SpawnActor<AAIController>(AIControllerClass, this->GetActorLocation(), this->GetActorRotation());
 
 	if (MyAIController)
@@ -72,6 +72,7 @@ void ANetOtherCharacter::Tick(float DeltaTime)
 	MoveToTarget(DeltaTime,500);
 
 }
+
 void ANetOtherCharacter::MoveToTarget(float DeltaTime, float Speed)
 {
 	if (FirstMove == true && Target.Size() > 0)
@@ -107,10 +108,5 @@ void ANetOtherCharacter::MoveToTarget(float DeltaTime, float Speed)
 	SetActorLocation(NewLocation);
 }
 
-// Called to bind functionality to input
-void ANetOtherCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-}
 

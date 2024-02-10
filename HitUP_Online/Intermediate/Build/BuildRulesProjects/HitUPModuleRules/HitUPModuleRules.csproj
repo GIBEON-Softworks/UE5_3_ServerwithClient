@@ -14,8 +14,8 @@
     <ProjectReference Include="..\..\..\..\..\..\Program Files\EpicGames\UE_5.3\Engine\Source\Programs\UnrealBuildTool\UnrealBuildTool.csproj"><Private>false</Private></ProjectReference>
   </ItemGroup>
   <ItemGroup>
-  <Compile Include="..\..\..\..\Source\HitUP_Online\Sample.Build.cs"><Link>Source\HitUP_Online\Sample.Build.cs</Link></Compile>
-  <Compile Include="..\..\..\..\Source\Sample.Target.cs"><Link>Source\Sample.Target.cs</Link></Compile>
-  <Compile Include="..\..\..\..\Source\SampleEditor.Target.cs"><Link>Source\SampleEditor.Target.cs</Link></Compile>
+  <Compile Include="..\..\..\..\Source\HitUP.Target.cs"><Link>Source\HitUP.Target.cs</Link></Compile>
+  <Compile Include="..\..\..\..\Source\HitUPEditor.Target.cs"><Link>Source\HitUPEditor.Target.cs</Link></Compile>
+  <Compile Include="..\..\..\..\Source\HitUP_Online\HitUP.Build.cs"><Link>Source\HitUP_Online\HitUP.Build.cs</Link></Compile>
   </ItemGroup>
 </Project>

@@ -5,10 +5,10 @@
 #include "CoreMinimal.h"
 
 /**
- * 
+ *
  */
 template<typename T>
-class SAMPLE_API ThreadSafeQueue
+class HITUP_API ThreadSafeQueue
 {
 private:
     TQueue<T> queue;

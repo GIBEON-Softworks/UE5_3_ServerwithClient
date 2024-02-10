@@ -1,13 +1,13 @@
 {
 	"Targets": [
 		{
-			"Name": "Sample",
-			"Path": "..\\Source\\Sample.Target.cs",
+			"Name": "HitUP",
+			"Path": "..\\Source\\HitUP.Target.cs",
 			"Type": "Game"
 		},
 		{
-			"Name": "SampleEditor",
-			"Path": "..\\Source\\SampleEditor.Target.cs",
+			"Name": "HitUPEditor",
+			"Path": "..\\Source\\HitUPEditor.Target.cs",
 			"Type": "Editor"
 		}
 	]

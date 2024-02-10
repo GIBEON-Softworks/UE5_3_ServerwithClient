@@ -19,8 +19,8 @@ ANetActor::ANetActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	static ConstructorHelpers::FClassFinder<APawn> NetBp(TEXT("/Game/ThirdPerson/Blueprints/NetChar"));
+	///Script/Engine.Blueprint'/Game/HitUP/Widgets/Actors/BPC_NetActor.BPC_NetActor'
+	static ConstructorHelpers::FClassFinder<APawn> NetBp(TEXT("/Game/HitUP/Widgets/Actors/BPC_NetActor"));
 	if (NetBp.Class != NULL)
 	{
 		PlayerClass = NetBp.Class;
@@ -83,6 +83,7 @@ void ANetActor::Tick(float DeltaTime)
 	}
 }
 
+//for Widget Login
 void ANetActor::ReqLogin(FString ip, FString port, FString name)
 {
 	// 커낵션 확인
@@ -101,6 +102,8 @@ void ANetActor::JoinRoom(int RoomNumber)
 	ReqJoinRoomPacket room;
 	room.room_id = RoomNumber;
 	Client->Send(&room);
+
+	//월드상 움직임을 주는 값
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ANetActor::SendMove, 0.05f, true);
 }
 
@@ -138,7 +141,7 @@ void ANetActor::AddPlayer(uint64 AddSessionId, FString nickname)
 	if (actor != nullptr) return;
 
 	auto player = Cast<ANetOtherCharacter>(GetWorld()->SpawnActor<APawn>(PlayerClass, FVector(1000, 1000, 88), FRotator(0, 0, 0)));
-	
+
 	TArray<UTextRenderComponent*> Components;
 	player->GetComponents<UTextRenderComponent>(Components);
 
@@ -174,7 +177,7 @@ void ANetActor::ResJoinRoom(BasePacket* packet)
 	// 현재 플레이어 캐릭터를 가져오기
 	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
 	// AMyCharacter로 캐스팅하기
-	MyPlayer = Cast<ASampleCharacter>(PlayerCharacter);
+	MyPlayer = Cast<ACSampleCharacter>(PlayerCharacter);
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -184,7 +187,7 @@ void ANetActor::ResJoinRoom(BasePacket* packet)
 
 		AddPlayer(session_id, nickname);
 	}
-	
+
 }
 
 void ANetActor::PlayerJoinRoom(BasePacket* packet)
@@ -192,10 +195,10 @@ void ANetActor::PlayerJoinRoom(BasePacket* packet)
 	auto roompacket = reinterpret_cast<BroadJoinRoomPacket*>(packet);
 	if (roompacket->session_id == MySessionId)
 		return;
-	
+
 	FString string = TEXT("플레이어입장 " + FString::FromInt(roompacket->session_id));
 	UE_LOG(LogTemp, Log, TEXT("%s"), *string);
-	
+
 	AddPlayer(roompacket->session_id, roompacket->name);
 }
 

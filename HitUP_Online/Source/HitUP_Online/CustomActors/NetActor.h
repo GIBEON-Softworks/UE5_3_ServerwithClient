@@ -7,23 +7,23 @@
 #include "NetActor.generated.h"
 
 class Connector;
-class ASampleCharacter;
+class ACSampleCharacter;
 class ANetOtherCharacter;
 struct BasePacket;
 
 UCLASS()
-class SAMPLE_API ANetActor : public AActor
+class HITUP_API ANetActor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	ANetActor();
 	~ANetActor();
 
 protected:
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
@@ -51,7 +51,7 @@ private:
 	uint64 MySessionId;
 
 	TMap<uint64, ANetOtherCharacter*> PlayerList;
-	ASampleCharacter* MyPlayer;
+	ACSampleCharacter* MyPlayer;
 	FTimerHandle TimerHandle;
 
 	TSubclassOf<APawn> PlayerClass;

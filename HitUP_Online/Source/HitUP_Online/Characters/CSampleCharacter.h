@@ -47,7 +47,6 @@ class ACSampleCharacter : public ACharacter
 public:
 	ACSampleCharacter();
 	
-
 protected:
 
 	/** Called for movement input */

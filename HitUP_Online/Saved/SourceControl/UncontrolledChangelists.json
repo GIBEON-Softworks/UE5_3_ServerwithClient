@@ -1,0 +1,42 @@
+{
+	"version": 1,
+	"changelists": [
+		{
+			"guid": "00000000000000000000000000000000",
+			"description": "Default Uncontrolled Changelist",
+			"files": [
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Widgets/Actors/BPC_NetActor.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/ThirdPerson/Blueprints/LoginWidget.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Widgets/Online/LoginWidget.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Widgets/Online/GameWidget.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Widgets/Online/LobbyWidget.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Characters/BPC_NetOtherCharacter.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Characters/BPC_SampleCharacter.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/CharacterSystems/BPC_ParentsChar.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Characters/Animations/ABP_Character_p.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Characters/Animations/Basic_Idles/MM_Walk_InPlace.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Characters/Animations/Basic_Idles/MM_Idle.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Characters/Animations/Basic_Idles/MM_Walk_Fwd.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Characters/Animations/Basic_Idles/MM_Run_Fwd.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Characters/Animations/Basic_Idles/BS_Walk_Run.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Characters/Animations/BlendSpaces/BS_Walk_Run.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/CharacterSystems/Animations/BlendSpaces/BS_Walk_Run.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/CharacterSystems/Animations/Basic_Idles/BS_Walk_Run.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/CharacterSystems/Animations/Basic_Idles/MM_Run_Fwd.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/CharacterSystems/Animations/Basic_Idles/MM_Walk_Fwd.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/CharacterSystems/Animations/Basic_Idles/MM_Idle.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/CharacterSystems/Animations/Basic_Idles/MM_Walk_InPlace.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/CharacterSystems/Animations/ABP_Character_p.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/__ExternalActors__/ThirdPerson/Maps/ThirdPersonMap/D/7Z/U51STVPD1QSADW1FPMLDYO.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/ThirdPerson/Maps/ThirdPersonMap.umap",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Characters/Animations/ABP_HitUP.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/HitUP/Characters/BPC_HitUPGameMode.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/ThirdPerson/Blueprints/NetChar.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/ThirdPerson/Blueprints/MainChar.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/ThirdPerson/Blueprints/GameWidget.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/ThirdPerson/Blueprints/LobbyWidget.uasset",
+				"D:/UE5_3_ServerwithClient/HitUP_Online/Content/ThirdPerson/Blueprints/BP_NetActor.uasset"
+			]
+		}
+	]
+}

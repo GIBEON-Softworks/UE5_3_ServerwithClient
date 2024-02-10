@@ -30,7 +30,7 @@ struct Packet
 	}
 };
 
-class SAMPLE_API Connector : public FRunnable
+class HITUP_API Connector : public FRunnable
 {
 public:
 	Connector();

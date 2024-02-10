@@ -9,7 +9,7 @@
 class AAIController;
 
 UCLASS()
-class SAMPLE_API ANetOtherCharacter : public ACharacter
+class HITUP_API ANetOtherCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -24,9 +24,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	inline void SetTargetPos(FVector v)
 	{

@@ -7,7 +7,7 @@
 /**
  * 
  */
-class SAMPLE_API StreamBuffer
+class HITUP_API StreamBuffer
 {
 public:
 	StreamBuffer(uint16 buffer_size);

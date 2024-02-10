@@ -1,0 +1,23 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue5_3_serverwithclient\\hitup_online\\intermediate\\build\\win64\\unrealeditor\\inc\\hitup\\uht\\netothercharacter.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue5_3_serverwithclient\\hitup_online\\intermediate\\build\\win64\\x64\\hitupeditor\\development\\unrealed\\sharedpch.unrealed.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue5_3_serverwithclient\\hitup_online\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\hitup\\definitions.hitup.h",
+            "d:\\ue5_3_serverwithclient\\hitup_online\\source\\hitup_online\\characters\\netothercharacter.h",
+            "d:\\program files\\epicgames\\ue_5.3\\engine\\source\\runtime\\engine\\classes\\gameframework\\character.h",
+            "d:\\program files\\epicgames\\ue_5.3\\engine\\source\\runtime\\engine\\classes\\gameframework\\charactermovementreplication.h",
+            "d:\\program files\\epicgames\\ue_5.3\\engine\\source\\runtime\\experimental\\iris\\core\\public\\iris\\serialization\\irisobjectreferencepackagemap.h",
+            "d:\\program files\\epicgames\\ue_5.3\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\iriscore\\uht\\irisobjectreferencepackagemap.generated.h",
+            "d:\\program files\\epicgames\\ue_5.3\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\charactermovementreplication.generated.h",
+            "d:\\program files\\epicgames\\ue_5.3\\engine\\source\\runtime\\engine\\classes\\gameframework\\rootmotionsource.h",
+            "d:\\program files\\epicgames\\ue_5.3\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\rootmotionsource.generated.h",
+            "d:\\program files\\epicgames\\ue_5.3\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\character.generated.h",
+            "d:\\ue5_3_serverwithclient\\hitup_online\\intermediate\\build\\win64\\unrealeditor\\inc\\hitup\\uht\\netothercharacter.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

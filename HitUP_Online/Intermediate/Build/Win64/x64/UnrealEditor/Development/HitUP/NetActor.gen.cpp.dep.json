@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue5_3_serverwithclient\\hitup_online\\intermediate\\build\\win64\\unrealeditor\\inc\\hitup\\uht\\netactor.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue5_3_serverwithclient\\hitup_online\\intermediate\\build\\win64\\x64\\hitupeditor\\development\\unrealed\\sharedpch.unrealed.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue5_3_serverwithclient\\hitup_online\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\hitup\\definitions.hitup.h",
+            "d:\\ue5_3_serverwithclient\\hitup_online\\source\\hitup_online\\customactors\\netactor.h",
+            "d:\\ue5_3_serverwithclient\\hitup_online\\intermediate\\build\\win64\\unrealeditor\\inc\\hitup\\uht\\netactor.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

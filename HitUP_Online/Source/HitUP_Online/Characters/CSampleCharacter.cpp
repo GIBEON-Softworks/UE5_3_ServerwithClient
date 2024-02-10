@@ -16,7 +16,7 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 //////////////////////////////////////////////////////////////////////////
 // ASampleCharacter
 
-ACSampleCharacter::ACSampleCharacter()
+ACSampleCharacter::ACSampleCharacter() 
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);

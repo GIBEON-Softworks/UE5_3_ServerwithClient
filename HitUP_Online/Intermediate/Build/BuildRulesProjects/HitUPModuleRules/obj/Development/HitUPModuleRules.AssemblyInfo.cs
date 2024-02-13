@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HitUPModuleRules")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Development")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+82953325030ac408c8d71abaf2af6c38d35a6f6d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+720f0807981882d446e61083e9a8ff90c423f99f")]
 [assembly: System.Reflection.AssemblyProductAttribute("HitUPModuleRules")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HitUPModuleRules")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -20,7 +20,7 @@ ANetActor::ANetActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	///Script/Engine.Blueprint'/Game/HitUP/Widgets/Actors/BPC_NetActor.BPC_NetActor'
-	static ConstructorHelpers::FClassFinder<APawn> NetBp(TEXT("/Game/HitUP/Widgets/Actors/BPC_NetActor"));
+	static ConstructorHelpers::FClassFinder<APawn> NetBp(TEXT("'Blueprint'/Game/HitUP/Widgets/Actors/BPC_NetActor.BPC_NetActor_C'")); //240214 변경사항 _C 명시
 	if (NetBp.Class != NULL)
 	{
 		PlayerClass = NetBp.Class;

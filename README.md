@@ -8,12 +8,10 @@
 
 
 # UE5 사용시 주의 사항
-### 수정 사항 
-- 240213 - 
-1. Binaries 폴더에서 제외됬던 파일을 추가 하였습니다.
-  <p align="center">
-    
-  ![image](https://github.com/masin556/UE5_3_ServerwithClient/assets/65951253/dff53db5-f9ea-4a13-b3c0-d6bf3b3da140)
-  </p>
-  
+### Debuging
+- 240214 - 
+1. Blueprint  C++로 만들어준 자식 블루프린트의 경우 명시적으로 꼭 ' _C' 주소를 넣어주고 뒤에 붙여주도록 하자. 
+  ```cpp
+  static ConstructorHelpers::FClassFinder<APawn> NetBp(TEXT("'Blueprint'/Game/HitUP/Widgets/Actors/BPC_NetActor.BPC_NetActor_C'"));
+  ```
 2. 

@@ -45,6 +45,7 @@ private: // 네트워크 함수들
 	void PlayerJoinRoom(BasePacket* packet);
 	void OutRoom(BasePacket* packet);
 	void Move(BasePacket* packet);
+	void SendAnimation(BasePacket* packet);
 
 private:
 	Connector* Client;

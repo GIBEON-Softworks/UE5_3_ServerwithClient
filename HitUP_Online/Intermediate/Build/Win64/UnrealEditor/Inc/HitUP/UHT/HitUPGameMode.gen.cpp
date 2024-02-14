@@ -5,7 +5,7 @@
 ===========================================================================*/
 
 #include "UObject/GeneratedCppIncludes.h"
-#include "HitUP_Online/HitUPGameMode.h"
+#include "HitUPGameMode.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeHitUPGameMode() {}
 // Cross Module References
@@ -74,17 +74,18 @@ void EmptyLinkFunctionForGeneratedCodeHitUPGameMode() {}
 	{
 		return AHitUPGameMode::StaticClass();
 	}
+	AHitUPGameMode::AHitUPGameMode(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {}
 	DEFINE_VTABLE_PTR_HELPER_CTOR(AHitUPGameMode);
 	AHitUPGameMode::~AHitUPGameMode() {}
-	struct Z_CompiledInDeferFile_FID_UE5_3_ServerwithClient_HitUP_Online_Source_HitUP_Online_HitUPGameMode_h_Statics
+	struct Z_CompiledInDeferFile_FID_HitUP_Online_Source_HitUP_Online_HitUPGameMode_h_Statics
 	{
 		static const FClassRegisterCompiledInInfo ClassInfo[];
 	};
-	const FClassRegisterCompiledInInfo Z_CompiledInDeferFile_FID_UE5_3_ServerwithClient_HitUP_Online_Source_HitUP_Online_HitUPGameMode_h_Statics::ClassInfo[] = {
+	const FClassRegisterCompiledInInfo Z_CompiledInDeferFile_FID_HitUP_Online_Source_HitUP_Online_HitUPGameMode_h_Statics::ClassInfo[] = {
 		{ Z_Construct_UClass_AHitUPGameMode, AHitUPGameMode::StaticClass, TEXT("AHitUPGameMode"), &Z_Registration_Info_UClass_AHitUPGameMode, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AHitUPGameMode), 3760442135U) },
 	};
-	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_UE5_3_ServerwithClient_HitUP_Online_Source_HitUP_Online_HitUPGameMode_h_2546339257(TEXT("/Script/HitUP"),
-		Z_CompiledInDeferFile_FID_UE5_3_ServerwithClient_HitUP_Online_Source_HitUP_Online_HitUPGameMode_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_UE5_3_ServerwithClient_HitUP_Online_Source_HitUP_Online_HitUPGameMode_h_Statics::ClassInfo),
+	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_HitUP_Online_Source_HitUP_Online_HitUPGameMode_h_2546339257(TEXT("/Script/HitUP"),
+		Z_CompiledInDeferFile_FID_HitUP_Online_Source_HitUP_Online_HitUPGameMode_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_HitUP_Online_Source_HitUP_Online_HitUPGameMode_h_Statics::ClassInfo),
 		nullptr, 0,
 		nullptr, 0);
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

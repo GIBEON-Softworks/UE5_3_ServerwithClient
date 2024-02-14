@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = HitUPModuleRules
-build_property.ProjectDir = D:\UE5_3_ServerwithClient\HitUP_Online\Intermediate\Build\BuildRulesProjects\HitUPModuleRules\
+build_property.ProjectDir = C:\Unreal Projects\UE5_3_ServerwithClient\HitUP_Online\Intermediate\Build\BuildRulesProjects\HitUPModuleRules\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

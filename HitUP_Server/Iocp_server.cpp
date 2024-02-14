@@ -94,7 +94,7 @@ void IocpServer::Start(uint16_t thread_count, uint16_t port)
 	if (thread_pool_ != nullptr)
 		return;
 
-	std::cout << "서버 시작" << std::endl;
+	std::cout << "StartServer" << std::endl; // 서버시작 -> StartServer
 	port_ = port;
 	thread_count_ = thread_count;
 	packet_handler_ = new PacketHandler[thread_count];

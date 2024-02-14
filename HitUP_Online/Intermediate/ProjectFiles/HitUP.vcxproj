@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{270917E9-267B-3505-B596-79BC6BFD0B0D}</ProjectGuid>
+    <ProjectGuid>{4E137CB8-563C-3EBF-9EBE-0D05FD7FB105}</ProjectGuid>
     <RootNamespace>HitUP</RootNamespace>
   </PropertyGroup>
   <Import Project="UECommon.props" />
@@ -110,7 +110,6 @@
     <None Include="..\..\Source\HitUP.Target.cs"/>
     <None Include="..\..\Source\HitUPEditor.Target.cs"/>
     <None Include="..\..\.editorconfig"/>
-    <None Include="..\..\.vsconfig"/>
     <None Include="..\..\Config\DefaultEditor.ini"/>
     <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini"/>
     <None Include="..\..\Config\DefaultEngine.ini"/>

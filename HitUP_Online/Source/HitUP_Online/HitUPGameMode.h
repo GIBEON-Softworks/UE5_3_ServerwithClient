@@ -11,8 +11,7 @@ class AHitUPGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
-public:
-	AHitUPGameMode();
+
 };
 
 

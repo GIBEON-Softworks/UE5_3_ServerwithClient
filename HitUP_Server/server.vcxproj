@@ -140,7 +140,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Iocp_server.cpp" />
+    <ClCompile Include="Iocp_server.cpp">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">서버 클라 받기</DeploymentContent>
+    </ClCompile>
     <ClCompile Include="packet_handler.cpp" />
     <ClCompile Include="game_server.cpp" />
     <ClCompile Include="room_worker.cpp" />

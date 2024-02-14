@@ -89,7 +89,7 @@ void GameServer::Login(Packet& packet)
 {
 	GameSession* session = reinterpret_cast<GameSession*>(packet.session_);;
 	ReqLoginPacket* login_packet = reinterpret_cast<ReqLoginPacket*>(packet.packet_);
-	std::cout << "로그인 : " << login_packet->name << std::endl;
+	std::cout << "Login : " << login_packet->name << std::endl;
 
 	// 이름및 고유 세션 키 등록
 	int64_t prevId = session_inc_.fetch_add(1, std::memory_order_acq_rel);
@@ -112,7 +112,7 @@ void GameServer::JoinRoom(Packet& packet)
 	ReqJoinRoomPacket* room_packet = reinterpret_cast<ReqJoinRoomPacket*>(packet.packet_);
 	RoomWorker* room = session->GetRoom();
 
-	printf("방 참가 %lld %lld", session->GetSessionId(), room_packet->room_id);
+	printf("Join Room %lld %lld", session->GetSessionId(), room_packet->room_id);
 
 	if (room->GetSessionCount() >= MAX_ROOM_SESSION_COUNT)
 	{

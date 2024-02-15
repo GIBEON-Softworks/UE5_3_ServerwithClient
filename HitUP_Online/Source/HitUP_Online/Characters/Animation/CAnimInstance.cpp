@@ -10,8 +10,9 @@ void UCAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
 
+	//현재 애니메이션 인스턴스가 속한 블루프린트 소유자의 참조를 가져온다.
 	OwnerCharacter = Cast<ACharacter>(TryGetPawnOwner());
-	if (OwnerCharacter == nullptr) return;
+	if (OwnerCharacter == nullptr) return; // 소유 캐릭터가 없을 경우
 
 }
 

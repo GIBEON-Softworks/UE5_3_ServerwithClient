@@ -1,8 +1,8 @@
 {
 	"SourceFiles": [
-		"C:\\UE5_3_ServerwithClient\\HitUP\\Source\\HitUP_Online\\HitUP.Build.cs",
-		"C:\\UE5_3_ServerwithClient\\HitUP\\Source\\HitUP.Target.cs",
-		"C:\\UE5_3_ServerwithClient\\HitUP\\Source\\HitUPEditor.Target.cs"
+		"C:\\UE5_3_ServerwithClient\\HitUP_Online\\Source\\HitUP_Online\\HitUP.Build.cs",
+		"C:\\UE5_3_ServerwithClient\\HitUP_Online\\Source\\HitUP.Target.cs",
+		"C:\\UE5_3_ServerwithClient\\HitUP_Online\\Source\\HitUPEditor.Target.cs"
 	],
 	"EngineVersion": "5.3.2"
 }

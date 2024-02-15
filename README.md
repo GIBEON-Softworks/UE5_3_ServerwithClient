@@ -4,6 +4,7 @@
 | 작업일 | 작업 사항 | 내용 |
 |---|---|---|
 |24.02.07| Unreal Client request Server[Cpp] | 언리얼 클라이언트 서버 로비 및 로그인 IP등 기본 포트 소켓통신|
+|24.02.14 - 24.02.15| Unreal Client UI | 기존 프로젝트 병합에 의한 bug fix 및 UI 결합 및 수정 | 
 
 
 

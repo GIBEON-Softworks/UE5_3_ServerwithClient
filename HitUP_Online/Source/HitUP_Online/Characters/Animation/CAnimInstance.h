@@ -28,6 +28,9 @@ protected:
 	bool bFalling;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	FVector Velocity; //º¤ÅÍº¯¼ö
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
 	bool bMoving;
 
 public:

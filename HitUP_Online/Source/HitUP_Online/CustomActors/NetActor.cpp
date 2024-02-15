@@ -30,11 +30,11 @@ ANetActor::ANetActor()
 ANetActor::~ANetActor()
 {
 
-	if (Client != nullptr)
-		delete Client;
+	//if (Client != nullptr)
+	//	delete Client;
 
 	// 메모리 누수를 방지하기 위해 MyPlayer를 삭제합니다.
-	/*if (MyPlayer != nullptr)
+	if (MyPlayer != nullptr)
 	{
 		MyPlayer->Destroy();
 		MyPlayer = nullptr;
@@ -44,7 +44,7 @@ ANetActor::~ANetActor()
 	{
 		delete Client;
 		Client = nullptr;
-	}*/
+	}
 }
 
 // Called when the game starts or when spawned
@@ -90,6 +90,9 @@ void ANetActor::Tick(float DeltaTime)
 
 		case GAME_PACKET::RES_MOVE:
 			Move(item.packet);
+			break;
+		case GAME_PACKET::RES_ANIMATION:
+			//애니메이션 함수 연결
 			break;
 		}
 

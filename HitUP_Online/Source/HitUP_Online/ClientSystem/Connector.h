@@ -55,9 +55,6 @@ public:
 		MessageQueue.DrainQueue(packets);
 	}
 
-
-
-
 private:
 	FSocket* Socket;
 	StreamBuffer* Buffer;

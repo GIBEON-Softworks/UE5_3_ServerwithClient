@@ -14,4 +14,9 @@
   ```cpp
   static ConstructorHelpers::FClassFinder<APawn> NetBp(TEXT("'Blueprint'/Game/HitUP/Widgets/Actors/BPC_NetActor.BPC_NetActor_C'"));
   ```
-2. 
+- 240216 -
+1. UI 병합 및 레벨 연동
+2. 구글 로그인을 위한 작업 예정 ( 보내야 할 정보 및 서버와의 공유 예정 )
+3. 기본 회원가입 및 소셜 로그인(구글)
+4. 소셜에 해당 아이디를 인증하고 나면 클라에서 동기화 루프 해당 아이디가 정확하게 받았다면 허락 해줘서 들어오게 한다?
+5. 로그인 후 해당 IP? 또는 토큰? 등을 파악해서 닉네임이 없다면 만들게 한다. 

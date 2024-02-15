@@ -15,6 +15,8 @@
   ```cpp
   static ConstructorHelpers::FClassFinder<APawn> NetBp(TEXT("'Blueprint'/Game/HitUP/Widgets/Actors/BPC_NetActor.BPC_NetActor_C'"));
   ```
+
+### Tasks
 - 240216 -
 1. UI 병합 및 레벨 연동
 2. 구글 로그인을 위한 작업 예정 ( 보내야 할 정보 및 서버와의 공유 예정 )

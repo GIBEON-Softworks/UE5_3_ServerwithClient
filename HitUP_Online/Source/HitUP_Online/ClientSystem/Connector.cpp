@@ -10,7 +10,6 @@
 Connector::Connector()
 	:Socket(nullptr), Buffer(nullptr), Thread(nullptr)
 {
-
 }
 
 Connector::~Connector()
@@ -110,7 +109,6 @@ void Connector::Send(BasePacket* packet)
 	int32 SendLen = 0;
 	Socket->Send((uint8*)packet, packet->packet_len, SendLen);
 }
-
 
 void Connector::Stop()
 {

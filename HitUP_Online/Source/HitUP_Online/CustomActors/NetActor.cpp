@@ -17,21 +17,34 @@
 ANetActor::ANetActor()
 	:Client(nullptr), MyPlayer(nullptr)
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
-	///Script/Engine.Blueprint'/Game/HitUP/Characters/BPC_NetOtherCharacter.BPC_NetOtherCharacter'
-	//static ConstructorHelpers::FClassFinder<APawn> NetBp(TEXT("Blueprint'/Game/HitUP/Widgets/Actors/BPC_NetActor.BPC_NetActor_C'")); //240214 변경사항 _C 명시
-	//if (NetBp.Class != NULL)
+
+	static ConstructorHelpers::FClassFinder<APawn> BPNetActor(TEXT("Blueprint'/Game/HitUP/Characters/BPC_NetOtherCharacter.BPC_NetOtherCharacter_C'"));
+	if (BPNetActor.Class != NULL)
 	{
-		//PlayerClass = NetBp.Class;
+		PlayerClass = BPNetActor.Class;
 	}
 }
 
 ANetActor::~ANetActor()
 {
-	if(Client!=nullptr)
+
+	if (Client != nullptr)
 		delete Client;
+
+	// 메모리 누수를 방지하기 위해 MyPlayer를 삭제합니다.
+	/*if (MyPlayer != nullptr)
+	{
+		MyPlayer->Destroy();
+		MyPlayer = nullptr;
+	}
+
+	if (Client != nullptr)
+	{
+		delete Client;
+		Client = nullptr;
+	}*/
 }
 
 // Called when the game starts or when spawned
@@ -84,7 +97,6 @@ void ANetActor::Tick(float DeltaTime)
 	}
 }
 
-//for Widget Login
 void ANetActor::ReqLogin(FString ip, FString port, FString name)
 {
 	// 커낵션 확인
@@ -103,11 +115,8 @@ void ANetActor::JoinRoom(int RoomNumber)
 	ReqJoinRoomPacket room;
 	room.room_id = RoomNumber;
 	Client->Send(&room);
-
-	//월드상 움직임을 주는 값
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ANetActor::SendMove, 0.05f, true);
 }
-
 
 void ANetActor::ClearRoom()
 {
@@ -229,4 +238,10 @@ void ANetActor::Move(BasePacket* packet)
 	v.Y = movepacket->y;
 	v.Z = movepacket->z;
 	(*actor)->SetTargetPos(v);
+}
+
+void ANetActor::SendAnimation(BasePacket* packet)
+{
+	//TODO) 240214 애니메이션 보내기
+	Client->Send(packet);
 }

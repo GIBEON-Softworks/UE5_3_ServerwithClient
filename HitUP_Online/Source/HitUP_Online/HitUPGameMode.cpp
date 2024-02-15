@@ -6,7 +6,6 @@
 
 AHitUPGameMode::AHitUPGameMode()
 {
-
 }
 
 void AHitUPGameMode::BeginPlay()

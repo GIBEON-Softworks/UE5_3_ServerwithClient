@@ -4,6 +4,6 @@
 int main()
 {	
 	GameServer server;
-	server.Start(8, 55555);
+	server.Start(8, 12345);
 }
    

@@ -28,6 +28,8 @@ public class HitUP : ModuleRules
         //Ελ½Ε
         PrivateDependencyModuleNames.Add("Sockets");
         PrivateDependencyModuleNames.Add("Networking");
+        PrivateDependencyModuleNames.Add("HTTP");
+        PrivateDependencyModuleNames.Add("Json");
 
         //Controller for AI
         PublicDependencyModuleNames.Add("AIModule");

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "http.h"
 #include "HitUPGameMode.generated.h"
 
 UCLASS()
@@ -32,6 +33,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
 	void CalledWeb();
+
+private:
+	void OnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
+
 
 protected:
 	virtual void BeginPlay() override;

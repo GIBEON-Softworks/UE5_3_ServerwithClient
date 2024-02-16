@@ -8,6 +8,7 @@
 #include "Interfaces/IHttpRequest.h"
 #include "Interfaces/IHttpResponse.h"
 
+
 AHitUPGameMode::AHitUPGameMode()
 {
 }
@@ -64,9 +65,8 @@ void AHitUPGameMode::ChangeMenuWidget(TSubclassOf<UUserWidget> NewWidgetClass)
 			CurrentWidget->AddToViewport();
 		}
 	}
-
-
 }
+
 void AHitUPGameMode::ChangeLevel(const FString& LevelName)
 {
 	GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Red, TEXT("input ChangeLevel"));
@@ -79,20 +79,29 @@ void AHitUPGameMode::ChangeLevel(const FString& LevelName)
 
 void AHitUPGameMode::CalledWeb()
 {
+
+}
+
+void AHitUPGameMode::CallLogin()
+{
 	FString Url = TEXT("http://192.168.0.118:8000/jun/test/7");
 
 	// HTTP 요청 객체 생성
 	TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
 	HttpRequest->SetVerb("POST");
 	HttpRequest->SetURL(Url);
+	
+	GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Green, TEXT(" Post Call Web Browser"));
 
-	// 요청 완료 후 호출될 콜백 함수 설정
+	// 1. 로딩 창을 먼저 보여준다
+
+
+	// 요청 완료 후 호출될 콜백 함수 설정 ( 대기 )
 	HttpRequest->OnProcessRequestComplete().BindUObject(this, &AHitUPGameMode::OnHttpRequestComplete);
 
 	// 요청 보내기
 	HttpRequest->ProcessRequest();
 
-	// 브라우저 달기
 }
 
 // HTTP 요청 완료 시 호출되는 콜백 함수
@@ -103,6 +112,14 @@ void AHitUPGameMode::OnHttpRequestComplete(FHttpRequestPtr Request, FHttpRespons
 		// 응답이 성공적으로 받아졌을 때 처리하는 코드
 		FString ResponseData = Response->GetContentAsString();
 		UE_LOG(LogTemp, Warning, TEXT("HTTP Response: %s"), *ResponseData);
+		
+		// 2. 로딩 창 꺼주면서 ---> 레벨 이동
+		if (ResponseData == "")
+		{
+			GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Green, ResponseData);
+
+			ChangeLevel("Lv_Lobby01");
+		}
 	}
 	else
 	{
@@ -110,6 +127,7 @@ void AHitUPGameMode::OnHttpRequestComplete(FHttpRequestPtr Request, FHttpRespons
 		UE_LOG(LogTemp, Error, TEXT("HTTP Request failed"));
 	}
 }
+
 
 // 192.168.0.118
 

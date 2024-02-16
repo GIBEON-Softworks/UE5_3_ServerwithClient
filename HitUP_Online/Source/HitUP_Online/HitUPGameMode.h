@@ -34,6 +34,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
 	void CalledWeb();
 
+	UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
+	void CallLogin();
+
+
+
 private:
 	void OnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
 

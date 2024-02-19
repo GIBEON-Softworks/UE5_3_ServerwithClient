@@ -1,3 +1,5 @@
+// copyright by Choi SeungWoo
+
 #include "HitUPGameMode.h"
 
 #include "Engine.h"
@@ -47,7 +49,7 @@ void AHitUPGameMode::ChangeMenuWidget(TSubclassOf<UUserWidget> NewWidgetClass)
 	{
 		// UUserWidget에서 제공하는 RemoveFromViewport()를 사용해서
 		// viewoport에 있는 UI를 제거한다
-		CurrentWidget->RemoveFromViewport();
+		CurrentWidget->RemoveFromParent(); //240219 : RemoveFromViewport -> RemoveFromParent 변경 viewport는 이전 사항
 		CurrentWidget = nullptr;
 
 		GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Blue, TEXT("input ChangeMenuWidget"));
@@ -55,9 +57,9 @@ void AHitUPGameMode::ChangeMenuWidget(TSubclassOf<UUserWidget> NewWidgetClass)
 
 	if (NewWidgetClass != nullptr)
 	{
-		// 매개변수로 받은 NewWidgetClass가 유효한지 확인하고, 
+		// 매개변수로 받은 NewWidgetClass가 유효한지 확인하고,
 
-		// CurrentWidget함수로 NewWidgetClass를 저장하고 
+		// CurrentWidget함수로 NewWidgetClass를 저장하고
 		CurrentWidget = CreateWidget(GetWorld(), NewWidgetClass);
 		if (CurrentWidget != nullptr)
 		{
@@ -73,7 +75,7 @@ void AHitUPGameMode::ChangeLevel(const FString& LevelName)
 
 	/*FString NextLevelName = LevelName;*/
 
-	// level 전환 매서드 - 최승우 
+	// level 전환 매서드 - 최승우
 	UGameplayStatics::OpenLevel(GEngine->GetWorld(), FName(*LevelName));
 }
 

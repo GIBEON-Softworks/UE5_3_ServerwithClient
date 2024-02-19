@@ -9,11 +9,10 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"Engine",
+				"Engine"
 			]
 		}
 	],
-
 	"Plugins": [
 		{
 			"Name": "ModelingToolsEditorMode",
@@ -21,6 +20,10 @@
 			"TargetAllowList": [
 				"Editor"
 			]
+		},
+		{
+			"Name": "WebBrowserWidget",
+			"Enabled": true
 		}
 	]
 }

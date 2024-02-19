@@ -116,17 +116,18 @@ void AHitUPGameMode::OnHttpRequestComplete(FHttpRequestPtr Request, FHttpRespons
 		UE_LOG(LogTemp, Warning, TEXT("HTTP Response: %s"), *ResponseData);
 		
 		// 2. 로딩 창 꺼주면서 ---> 레벨 이동
-		if (ResponseData == "")
+		if (ResponseData != "")
 		{
-			GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Green, ResponseData);
+			GEngine->AddOnScreenDebugMessage(-10, 2.0f, FColor::Green, ResponseData);
 
-			ChangeLevel("Lv_Lobby01");
+			ChangeLevel("Lv_Map01");
 		}
 	}
 	else
 	{
 		// 요청이 실패했을 때 처리하는 코드
-		UE_LOG(LogTemp, Error, TEXT("HTTP Request failed"));
+		//UE_LOG(LogTemp, Error, TEXT("HTTP Request failed"));
+		GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Red, TEXT("HTTP Request failed"));
 	}
 }
 

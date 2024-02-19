@@ -47,6 +47,7 @@ struct ReqAnimationPacket : public BasePacket
 		packet_id = REQ_ANIMATION;
 		packet_len = sizeof(ReqAnimationPacket);
 	}
+
 	// 여기에 애니메이션 정보를 담을 필드를 추가합니다.
 	// 예를 들어, 애니메이션 종류를 나타내는 enum 또는 애니메이션 이름을 담을 수 있습니다.
 	// AnimationType animationType;

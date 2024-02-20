@@ -44,6 +44,10 @@ class ACSampleCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
+	/** Action Input Action */
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	//UInputAction* ClickAction;
+
 public:
 	ACSampleCharacter();
 	
@@ -54,7 +58,11 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
-			
+
+
+	//void ClickAction(const FInputActionValue& Value);
+	//void StopClickAction(const FInputActionValue& Value);
+		
 
 protected:
 	// APawn interface

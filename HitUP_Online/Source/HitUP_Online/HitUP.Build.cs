@@ -31,6 +31,9 @@ public class HitUP : ModuleRules
         PrivateDependencyModuleNames.Add("HTTP");
         PrivateDependencyModuleNames.Add("Json");
 
+
+
+
         //Controller for AI
         PublicDependencyModuleNames.Add("AIModule");
         PublicDependencyModuleNames.Add("GameplayTasks");

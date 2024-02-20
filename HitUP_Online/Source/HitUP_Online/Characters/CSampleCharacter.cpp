@@ -86,6 +86,10 @@ void ACSampleCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACSampleCharacter::Look);
+
+		// Click Action
+		//EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Started, this, &ACSampleCharacter::ClickAction);
+		//EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Completed, this, &ACSampleCharacter::StopClickAction);
 	}
 	else
 	{
@@ -129,3 +133,4 @@ void ACSampleCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
+

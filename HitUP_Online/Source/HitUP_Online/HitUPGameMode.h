@@ -35,12 +35,12 @@ public:
 	void CalledWeb();
 
 	UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
-	void CallLogin();
-
+	void CallLogin(const FString& Id, const FString& Password);
 
 
 private:
 	void OnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
+	FString HashString(const FString& InputString);
 
 
 protected:

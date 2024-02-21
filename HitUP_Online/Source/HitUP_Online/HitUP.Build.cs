@@ -14,6 +14,7 @@ public class HitUP : ModuleRules
         PrivateDependencyModuleNames.Add("CoreUObject");
         PrivateDependencyModuleNames.Add("Engine");
 
+
         PrivateDependencyModuleNames.Add("Slate");
         PrivateDependencyModuleNames.Add("SlateCore");
 
@@ -30,8 +31,6 @@ public class HitUP : ModuleRules
         PrivateDependencyModuleNames.Add("Networking");
         PrivateDependencyModuleNames.Add("HTTP");
         PrivateDependencyModuleNames.Add("Json");
-
-
 
 
         //Controller for AI

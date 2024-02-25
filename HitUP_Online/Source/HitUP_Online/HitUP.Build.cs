@@ -31,6 +31,7 @@ public class HitUP : ModuleRules
         PrivateDependencyModuleNames.Add("Networking");
         PrivateDependencyModuleNames.Add("HTTP");
         PrivateDependencyModuleNames.Add("Json");
+        PrivateDependencyModuleNames.Add("OnlineSubsystem");
 
 
         //Controller for AI

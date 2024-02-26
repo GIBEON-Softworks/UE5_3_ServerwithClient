@@ -9,7 +9,10 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"Engine"
+				"Engine",
+				"UMG",
+				"Slate",
+				"SlateCore"
 			]
 		}
 	],
@@ -27,6 +30,10 @@
 		},
 		{
 			"Name": "HDRIBackdrop",
+			"Enabled": true
+		},
+		{
+			"Name": "OnlineSubsystemGoogle",
 			"Enabled": true
 		}
 	]

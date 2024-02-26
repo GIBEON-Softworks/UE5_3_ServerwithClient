@@ -28,8 +28,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
 	void ChangeMenuWidget(TSubclassOf<UUserWidget> NewWidgetClass);
 
-	UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
-	static void ChangeLevel(const FString& LevelName);
+	//UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
+	//static void ChangeLevel(const FString& LevelName);
 
 	UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
 	void CalledWeb();
@@ -37,10 +37,24 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
 	void CallLogin(const FString& Id, const FString& Password);
 
+	UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
+	void CallJoin(const FString& Id, const FString& Address, const FString& Password);
+
+	UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
+	void ClickJoin(const FString& token, const int32 click_Point);
 
 private:
-	void OnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
+	// Login 요청
+	void LoginOnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
+	// Join 요청
+	void JoinOnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
+	// click 요청
+	void ClickOnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
+
 	FString HashString(const FString& InputString);
+
+	static void ChangeLevel(const FString& LevelName, UWorld* World);
+
 
 
 protected:

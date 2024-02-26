@@ -13,8 +13,12 @@
 #include "Dom/JsonObject.h"
 #include "Serialization/JsonSerializer.h"
 
+#include "Kismet/GameplayStatics.h" // 레벨 이동
+
 #include "Misc/SecureHash.h"
 #include "Misc/Base64.h"
+
+#include "Json.h" // 20240222 추가
 
 #include "GenericPlatform/GenericPlatformMisc.h"
 
@@ -40,14 +44,22 @@ void AHitUPGameMode::BeginPlay()
 		GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
 		ChangeMenuWidget(Level1StartWidgetClass);
 
-		//GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Red, TEXT("현재 Level : Lv_Lobby01"));
+		GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Purple, TEXT("현재 Level : Lv_Lobby01"));
 	}
 	else if (GetWorld()->GetMapName() == "UEDPIE_0_Lv_Map01")
 	{
 		StartWidget = nullptr; //CreateWidget<UUserWidget>(GetWorld(), Level2StartWidgetClass);
 		GetWorld()->GetFirstPlayerController()->bShowMouseCursor = false;
 
-		//GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Red, TEXT("현재 Level : Lv_Map01"));
+		GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Purple, TEXT("현재 Level : Lv_Map01"));
+	}
+	else if (GetWorld()->GetMapName() == "UEDPIE_0_Lv_Map02")
+	{
+		StartWidget = CreateWidget<UUserWidget>(GetWorld(), Level1StartWidgetClass);; //CreateWidget<UUserWidget>(GetWorld(), Level2StartWidgetClass);
+		GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
+		ChangeMenuWidget(Level1StartWidgetClass);
+
+		GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Purple, TEXT("현재 Level : Lv_Map02"));
 	}
 	//ChangeMenuWidget(StartingWidgetClass);
 }
@@ -78,14 +90,26 @@ void AHitUPGameMode::ChangeMenuWidget(TSubclassOf<UUserWidget> NewWidgetClass)
 	}
 }
 
-void AHitUPGameMode::ChangeLevel(const FString& LevelName)
+void AHitUPGameMode::ChangeLevel(const FString& LevelName, UWorld* World)
 {
 	GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Red, TEXT("input ChangeLevel"));
 
 	/*FString NextLevelName = LevelName;*/
 
-	// level 전환 매서드 - 최승우
-	UGameplayStatics::OpenLevel(GEngine->GetWorld(), FName(*LevelName));
+	// level 전환 매서드 - 최승우 
+	//							여기를 거쳐서 -> 다음 레벨로 이동 한다
+	
+	if (World)
+	{
+		// 레벨 전환 메서드
+		UGameplayStatics::OpenLevel(World, FName(*LevelName));
+	}
+	else
+	{
+		
+		// 월드를 얻어오지 못한 경우 에러 처리
+		UE_LOG(LogTemp, Error, TEXT("Failed to get world."));
+	}
 }
 
 void AHitUPGameMode::CalledWeb()
@@ -116,7 +140,7 @@ void AHitUPGameMode::CallLogin(const FString& Id, const FString& Password)
 	// 1. 로딩 창을 먼저 보여준다
 
 	// 요청 완료 후 호출될 콜백 함수 설정 ( 대기 )
-	HttpRequest->OnProcessRequestComplete().BindUObject(this, &AHitUPGameMode::OnHttpRequestComplete);
+	HttpRequest->OnProcessRequestComplete().BindUObject(this, &AHitUPGameMode::LoginOnHttpRequestComplete);
 
 	// 요청 보내기
 	HttpRequest->ProcessRequest();
@@ -135,31 +159,160 @@ void AHitUPGameMode::CallLogin(const FString& Id, const FString& Password)
 
 }
 
-// HTTP 요청 완료 시 호출되는 콜백 함수
-void AHitUPGameMode::OnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess)
+void AHitUPGameMode::CallJoin(const FString& Id, const FString& email, const FString& Password)
+{
+	FString Url = TEXT("http://hitup.shop:8000/api/signup");
+
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
+	JsonObject->SetStringField(TEXT("id"), Id);
+	JsonObject->SetStringField(TEXT("email"), email);
+	JsonObject->SetStringField(TEXT("password"), Password);
+
+	FString JsonData;
+	TSharedRef<TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&JsonData);
+	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
+
+	// HTTP 요청 객체 생성
+	TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
+	HttpRequest->SetVerb("POST");
+	HttpRequest->SetURL(Url);
+	HttpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+	HttpRequest->SetContentAsString(JsonData);
+
+	// 1. 로딩 창을 먼저 보여준다
+
+	// 요청 완료 후 호출될 콜백 함수 설정 ( 대기 )
+	HttpRequest->OnProcessRequestComplete().BindUObject(this, &AHitUPGameMode::JoinOnHttpRequestComplete);
+
+	// 요청 보내기
+	HttpRequest->ProcessRequest();
+
+	// 요청 보내기 
+	//if (HttpRequest->ProcessRequest())
+	//{
+			// 요청 성공시
+			// GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Green, TEXT(" Post Call Web Browser"));
+	//}
+	//else
+	//{
+			// 요청 실패시
+	//}
+
+}
+
+void AHitUPGameMode::ClickJoin(const FString& token, const int32 click_Point)
+{
+	FString Url = TEXT("http://hitup.shop:8000/api/click/up");
+
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
+	//JsonObject->SetStringField(TEXT("id"), click_Point);
+	JsonObject->SetNumberField(TEXT("click"), click_Point);
+	
+
+	FString JsonData;
+	TSharedRef<TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&JsonData);
+	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
+
+	// HTTP 요청 객체 생성
+	TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
+	HttpRequest->SetVerb("POST");
+	HttpRequest->SetURL(Url);
+
+	// 헤더의 토큰 추가						Bearer + "token"
+	FString AuthorizationHeaderValue = TEXT("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA4NzczNjY0LCJpYXQiOjE3MDg2ODcyNjQsImp0aSI6ImY1ZDY4NDQ1M2FlZTQ2ZjQ4MDU3NjZmNGFkNGNiNmFhIiwidWlkIjoyfQ.n3-rIpVUe84zF1ckFeFTISyDPNwHNEy3gWco5qYqvY8");
+	HttpRequest->SetHeader(TEXT("Authorization"), AuthorizationHeaderValue);
+	
+	HttpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+	HttpRequest->SetContentAsString(JsonData);
+
+	// 1. 로딩 창을 먼저 보여준다
+
+	// 요청 완료 후 호출될 콜백 함수 설정 ( 대기 )
+	HttpRequest->OnProcessRequestComplete().BindUObject(this, &AHitUPGameMode::ClickOnHttpRequestComplete);
+
+	// 요청 보내기
+	HttpRequest->ProcessRequest();
+
+	// 요청 보내기 
+	//if (HttpRequest->ProcessRequest())
+	//{
+			// 요청 성공시
+			// GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Green, TEXT(" Post Call Web Browser"));
+	//}
+	//else
+	//{
+			// 요청 실패시
+	//}
+}
+
+
+// HTTP Log요청 완료 시 호출되는 콜백 함수
+void AHitUPGameMode::LoginOnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess)
 {
 	if (bSuccess && Response.IsValid())
 	{
 		// 응답이 성공적으로 받아졌을 때 처리하는 코드
 		FString ResponseData = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("HTTP Response: %s"), *ResponseData);
-		
-		// 2. 로딩 창 꺼주면서 ---> 레벨 이동
-		if (ResponseData != "")
-		{
-			// 로그인 성공 데이터가 어떻게 넘어오는지 확인 
-			GEngine->AddOnScreenDebugMessage(-10, 10.0f, FColor::Green, ResponseData);
-			// 1. 닉네임이 잘 넘어왔다면, 
-			// 2. 
 
-			ChangeLevel("Lv_Map01");
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseData);
+		
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+		{
+			//TSharedPtr<FJsonObject> ResultObject = JsonObject->GetObjectField(TEXT("result"));
+
+			//if (ResultObject.IsValid())
+			//{
+			//	// "token" 필드 값을 추출
+			//	FString Token;
+
+			//	if (ResultObject->TryGetStringField(TEXT("token"), Token))
+			//	{
+			//		// 추출한 토큰 값 출력 또는 필요한 작업 수행
+			//		GEngine->AddOnScreenDebugMessage(-10, 10.0f, FColor::Blue, *Token);
+			//	}
+			//}
+
+			// 데이터 담기
+			int32 Code = JsonObject->GetNumberField("code");
+			UWorld* World = GetWorld();
+
+			// 2. 로딩 창 꺼주면서 ---> 레벨 이동
+			if (Code == 2000)
+			{
+				// 로그인 성공 데이터가 어떻게 넘어오는지 확인 
+				//GEngine->AddOnScreenDebugMessage(-10, 10.0f, FColor::Blue, TEXT(" Code : %d "), Code);
+				UE_LOG(LogTemp, Warning, TEXT("Code: %d"), Code);
+
+
+				// 1. 승인 요청이 완료 된다면, 
+				// 2. 받아온 token 데이터를 저장 한다  
+
+				// 3.  레벨을 넘어가고
+				ChangeLevel("Lv_Map02", World);
+				//ChangeLevel("Lv_Map02", World);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Code: %d"), Code);
+				/*
+				2000	성공	요청 성공			
+				4000	실패	Bad Request			
+				4102	실패	닉네임 중복			
+				4105	실패	닉네임을 입력해주세요.			
+				4107	실패	닉네임은 2자 이상 20자 이하여야 합니다.			
+				4900	실패	인증 토큰이 존재하지 않음			
+				4901	실패	인증 토큰 항목이 존재하지 않음			
+				4902	실패	유효하지 않은 토큰			
+				*/
+			}
+
 		}
 		else
 		{
 			// 연결이 안됐을때, 
 			// 1. 파싱해서 오류 메세지를 출력 한다
-			// 2. 
-			GEngine->AddOnScreenDebugMessage(-10, 2.0f, FColor::Green, ResponseData);
+			GEngine->AddOnScreenDebugMessage(-10, 2.0f, FColor::Red, ResponseData);
 		}
 	}
 	else
@@ -169,6 +322,138 @@ void AHitUPGameMode::OnHttpRequestComplete(FHttpRequestPtr Request, FHttpRespons
 		GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Red, TEXT("HTTP Request failed"));
 	}
 }
+
+// HTTP Join요청 완료 시 호출되는 콜백 함수
+void AHitUPGameMode::JoinOnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess)
+{
+	if (bSuccess && Response.IsValid())
+	{
+		// 응답이 성공적으로 받아졌을 때 처리하는 코드
+		FString ResponseData = Response->GetContentAsString();
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseData);
+
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+		{
+			// 데이터 담기
+			int32 Code = JsonObject->GetNumberField("code");
+			FString Message = JsonObject->GetStringField("message");
+
+			switch (Code)
+			{
+			case 2000:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			case 4000:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			case 4100:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			case 4101:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			case 4103:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			case 4104:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			case 4106:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			}
+			/*
+			2000	성공	요청 성공
+			4000	실패	Bad Request
+			4100	실패	이메일 중복
+			4101	실패	아이디 중복
+			4103	실패	이메일을 입력해주세요.
+			4104	실패	ID를 입력해주세요.
+			4106	실패	비밀번호를 입력해주세요.
+			*/
+		}
+		else
+		{
+			// 연결이 안됐을때, 
+			// 1. 파싱해서 오류 메세지를 출력 한다
+			GEngine->AddOnScreenDebugMessage(-10, 2.0f, FColor::Red, ResponseData);
+		}
+	}
+	else
+	{
+		// 요청이 실패했을 때 처리하는 코드
+		//UE_LOG(LogTemp, Error, TEXT("HTTP Request failed"));
+		GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Red, TEXT("HTTP Request failed"));
+	}
+}
+
+void AHitUPGameMode::ClickOnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess)
+{
+	if (bSuccess && Response.IsValid())
+	{
+		// 응답이 성공적으로 받아졌을 때 처리하는 코드
+		FString ResponseData = Response->GetContentAsString();
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseData);
+
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+		{
+			// 데이터 담기
+			int32 Code = JsonObject->GetNumberField("code");
+			FString Message = JsonObject->GetStringField("message");
+
+			switch (Code)
+			{
+			case 2000:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			case 4000:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			case 4001:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			case 4900:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			case 4901:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			case 4902:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			case 5200:
+				UE_LOG(LogTemp, Warning, TEXT("message : %s"), *Message);
+				break;
+			}
+			/*
+			2000	성공	요청 성공	
+			4000	실패	Bad Request	
+			4001	실패	잘못된 입력입니다.	
+			4900	실패	인증 토큰이 존재하지 않음	
+			4901	실패	인증 토큰 항목이 존재하지 않음	
+			4902	실패	유효하지 않은 토큰	
+			5200	오류	데이터베이스 오류	
+			*/
+		}
+		else
+		{
+			// 연결이 안됐을때, 
+			// 1. 파싱해서 오류 메세지를 출력 한다
+			GEngine->AddOnScreenDebugMessage(-10, 2.0f, FColor::Red, ResponseData);
+		}
+	}
+	else
+	{
+		// 요청이 실패했을 때 처리하는 코드
+		//UE_LOG(LogTemp, Error, TEXT("HTTP Request failed"));
+		GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Red, TEXT("HTTP Request failed"));
+	}
+}
+
 
 FString AHitUPGameMode::HashString(const FString& InputString)
 {	

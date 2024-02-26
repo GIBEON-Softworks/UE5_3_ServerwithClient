@@ -40,7 +40,7 @@ private:
 	// 크롬 브라우저 열기
 	void OpenChromeBrowser(const FString& URL);
 
-	void HandleLoginResponse(bool bSuccess);
+	void HandleLoginResponse(bool bSuccess, int32 Code);
 
 	// 난수 생성 함수
 	FString GenerateRandomString(int32 Length);
@@ -50,6 +50,11 @@ private:
 private:
 	bool bIsLoggedIn = false; // 사용자의 로그인 상태를 나타내는 변수
 
+
 public:
 	FString RandomValue;
+
+	// 로그인 성공 응답 코드 추출 (예: 200)
+	int32 ResponseCode;
+	FString ResponseBody;
 };

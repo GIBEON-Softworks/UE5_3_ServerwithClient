@@ -50,4 +50,6 @@ private:
 private:
 	bool bIsLoggedIn = false; // 사용자의 로그인 상태를 나타내는 변수
 
+public:
+	FString RandomValue;
 };

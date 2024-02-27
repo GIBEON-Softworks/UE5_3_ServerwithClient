@@ -47,14 +47,17 @@ private:
 
 	FTimerHandle LoginCheckTimerHandle;
 
-private:
-	bool bIsLoggedIn = false; // 사용자의 로그인 상태를 나타내는 변수
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsLoggedIn; // 사용자의 로그인 상태를 나타내는 변수
 
+	// 로그인 성공 응답 코드 추출 (예: 200)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ResponseCode;
 
 public:
 	FString RandomValue;
 
-	// 로그인 성공 응답 코드 추출 (예: 200)
-	int32 ResponseCode;
+
 	FString ResponseBody;
 };

@@ -9,7 +9,7 @@ public class HitUP : ModuleRules
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
         PublicIncludePaths.Add(ModuleDirectory);
 
-        //아래 추가해서 사용하면 됩니다. 
+        //아래 추가해서 사용하면 됩니다.
         PrivateDependencyModuleNames.Add("Core");
         PrivateDependencyModuleNames.Add("CoreUObject");
         PrivateDependencyModuleNames.Add("Engine");
@@ -31,6 +31,7 @@ public class HitUP : ModuleRules
         PrivateDependencyModuleNames.Add("Networking");
         PrivateDependencyModuleNames.Add("HTTP");
         PrivateDependencyModuleNames.Add("Json");
+        PrivateDependencyModuleNames.Add("JsonUtilities");
         PrivateDependencyModuleNames.Add("OnlineSubsystem");
 
 

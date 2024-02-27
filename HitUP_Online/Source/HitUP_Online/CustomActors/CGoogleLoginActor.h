@@ -9,7 +9,7 @@ UCLASS()
 class HITUP_API ACGoogleLoginActor : public AActor
 {
 	GENERATED_BODY()
-    
+
 public:
     ACGoogleLoginActor();
 
@@ -21,6 +21,10 @@ public:
     UFUNCTION(BlueprintCallable)
     void OnGoogleLoginButtonClicked();
 
+    // 레벨 이동 함수
+    UFUNCTION(BlueprintCallable)
+    void MoveToNewLevel(const FString& LevelName);
+
 private:
     void OpenChromeBrowser(const FString& URL);
     void OnBrowserClosed(const FString& URL);
@@ -31,6 +35,7 @@ private:
     void CheckTableCode(const FString& Url, const FString& Content);
     void HandleTableCodeResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
     void CheckTableCodePeriodically(); // 주기적으로 Tablecheck 확인하는 함수
+    void HandleCheckTableCodeTimer(); // 임시용 테이블
 
 private:
     FString RandomValue;
@@ -43,5 +48,10 @@ private:
     // Tablecheck 주기적 확인을 위한 변수
     bool bIsCheckingTableCode;
     FString LastTableCheckUrl;
-	
+
+private:
+    FString GoogleLoginUrl;
+
+   
+
 };

@@ -1,10 +1,15 @@
+/**
+* Producer : ShinChungSik
+* Date of production : 240221 -> 240228(Fin)
+* this Game function : Google Login Actors
+*/
 #include "CustomActors/CGoogleLoginActor.h"
 #include "Http.h"
 #include "Blueprint/UserWidget.h"
 #include "Json.h"
 #include "Serialization/JsonSerializer.h"
 #include "Dom/JsonObject.h"
-
+#include "Kismet/GameplayStatics.h"
 
 ACGoogleLoginActor::ACGoogleLoginActor()
 {
@@ -23,28 +28,29 @@ void ACGoogleLoginActor::BeginPlay()
     GetWorldTimerManager().SetTimer(LoginCheckTimerHandle, this, &ACGoogleLoginActor::CheckTableCodePeriodically, 5.0f, true);
 }
 
-
+// 버튼 클릭시
 void ACGoogleLoginActor::OnGoogleLoginButtonClicked()
 {
     if (!bIsLoggedIn)
     {
-        FString GoogleLoginUrl = "https://hitup.shop/google/login/";
-        RandomValue = GenerateRandomString(10);
+        GoogleLoginUrl = "https://hitup.shop/google/login/";
+        RandomValue = GenerateRandomString(10); // 난수 생성
         GoogleLoginUrl += RandomValue;
 
-        GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, GoogleLoginUrl);
+        // 브라우저를 열고 로그인 페이지를 띄움
+        SendHttpRequest(GoogleLoginUrl, TEXT("GET"), TEXT("")); //데이터 요청
         OpenChromeBrowser(GoogleLoginUrl);
-        SendHttpRequest(GoogleLoginUrl, TEXT("GET"), TEXT(""));
+
+        LastTableCheckUrl = "https://hitup.shop/google/login/tablecheck/" + RandomValue;
     }
 }
 
 void ACGoogleLoginActor::OpenChromeBrowser(const FString& URL)
 {
     bIsCheckingTableCode = true;
-    // 로그 추가: CreateProc 호출
-    GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("FPlatformProcess::CreateProc failed with error code: ") + FString::FromInt(LastError));
-    FPlatformProcess::CreateProc(*URL, nullptr, true, false, false, nullptr, 0, nullptr, nullptr);
-    LastTableCheckUrl = "https://hitup.shop/google/login/tablecheck/" + RandomValue;
+
+    // 로그 추가: LaunchURL 호출
+    FPlatformProcess::LaunchURL(*URL, nullptr, nullptr);
 }
 
 void ACGoogleLoginActor::OnBrowserClosed(const FString& URL)
@@ -60,6 +66,8 @@ void ACGoogleLoginActor::HandleLoginResponse(bool bSuccess, int32 Code)
         {
         case 2000:
             GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("Login Success"));
+            ///Script/Engine.World'/Game/HitUP/Levels/Lv_MainGame_01.Lv_MainGame_01'
+            MoveToNewLevel("Lv_MainGame_01");
             break;
         case 4000:
             GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Login Failed: Bad Request"));
@@ -106,11 +114,13 @@ void ACGoogleLoginActor::HandleGoogleLoginResponse(FHttpRequestPtr Request, FHtt
 {
     if (bWasSuccessful && Response.IsValid() && Response->GetResponseCode() == EHttpResponseCodes::Ok)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Login Success"));
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Opened"));
+        CheckTableCodePeriodically(); // 테이블 코드 확인을 시작
     }
     else
     {
         GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Failed to send HTTP request(HandleGoogleLoginResponse)"));
+
     }
 }
 
@@ -122,7 +132,6 @@ void ACGoogleLoginActor::CheckTableCode(const FString& Url, const FString& Conte
     Request->SetContentAsString(Content);
     Request->OnProcessRequestComplete().BindUObject(this, &ACGoogleLoginActor::HandleTableCodeResponse);
     Request->ProcessRequest();
-
 }
 
 void ACGoogleLoginActor::HandleTableCodeResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
@@ -133,12 +142,19 @@ void ACGoogleLoginActor::HandleTableCodeResponse(FHttpRequestPtr Request, FHttpR
         TSharedPtr<FJsonObject> JsonObject;
         TSharedRef<TJsonReader<TCHAR>> Reader = TJsonReaderFactory<TCHAR>::Create(ResponseData);
 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Response(HandleTableCodeResponse) : %s"), *ResponseData));
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("URI : %s"), *LastTableCheckUrl));
+        //UE_LOG(LogTemp, Log, TEXT("Response(HandleTableCodeResponse) : %s"), *ResponseData); // Output Log에 로그 출력
+        UE_LOG(LogTemp, Log, TEXT("URI : %s"), *LastTableCheckUrl); // Output Log에 로그 출력
+
+
         if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
         {
             int32 Code = JsonObject->GetIntegerField("code");
             if (Code == 2000)
             {
-                HandleLoginResponse(true, Code);
+                //TODO : Code 값만 넘겨주는걸로 하자
+                HandleLoginResponse(false, Code);
             }
             else
             {
@@ -154,24 +170,21 @@ void ACGoogleLoginActor::HandleTableCodeResponse(FHttpRequestPtr Request, FHttpR
     {
         GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Failed to send HTTP request(HandleTableCodeResponse)"));
     }
-
-    // 1초마다 다시 tablecheck 요청을 보내도록 함
-    GetWorldTimerManager().SetTimerForNextTick([this]() {
-        if (bIsCheckingTableCode) {
-            CheckTableCode(LastTableCheckUrl, TEXT(""));
-        }
-    });
 }
 
 void ACGoogleLoginActor::CheckTableCodePeriodically()
 {
-    if (bIsCheckingTableCode)
-    {
-        CheckTableCode(LastTableCheckUrl, TEXT(""));
-    }
+    // 몇 초 마다 해당 테이블 체크를 할 것인가? (내부 함수)
+    GetWorldTimerManager().SetTimer(LoginCheckTimerHandle, this, &ACGoogleLoginActor::HandleCheckTableCodeTimer, 1.0f, true);
 }
 
-
+// 새로운 함수 추가: 타이머에 사용될 함수
+void ACGoogleLoginActor::HandleCheckTableCodeTimer()
+{
+    // 여기에 테이블 코드를 확인하는 로직을 추가합니다.
+    //FString TableCheckUrl = "https://hitup.shop/google/login/tablecheck/" + RandomValue;
+    CheckTableCode(LastTableCheckUrl, TEXT(""));
+}
 
 
 
@@ -195,9 +208,22 @@ void ACGoogleLoginActor::Tick(float DeltaTime) // Tick 함수 구현
 {
     Super::Tick(DeltaTime);
 
-    // 주기적으로 Tablecheck 확인
-    if (bIsCheckingTableCode)
-    {
-        CheckTableCode(LastTableCheckUrl, TEXT(""));
-    }
+    //// 주기적으로 Tablecheck 확인
+    //if (bIsCheckingTableCode)
+    //{
+    //    CheckTableCode(LastTableCheckUrl, TEXT(""));
+    //}
+}
+
+
+// 레벨 이동 함수
+void ACGoogleLoginActor::MoveToNewLevel(const FString& LevelName)
+{
+    // 이동할 레벨의 경로를 설정합니다. 여기서 "NewLevel"은 이동할 레벨의 이름입니다.
+    //FString LevelName = TEXT("NewLevel");
+    GetWorldTimerManager().ClearTimer(LoginCheckTimerHandle);
+    bIsCheckingTableCode = false;
+
+    // 레벨 이동을 수행합니다.
+    UGameplayStatics::OpenLevel(GetWorld(), FName(*LevelName), true);
 }

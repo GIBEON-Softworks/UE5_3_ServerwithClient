@@ -1,9 +1,15 @@
 #include "CustomActors/CGoogleLoginActor.h"
 #include "Http.h"
 #include "Blueprint/UserWidget.h"
+#include "Json.h"
+#include "Serialization/JsonSerializer.h"
+#include "Dom/JsonObject.h"
 
 ACGoogleLoginActor::ACGoogleLoginActor()
 {
+	//  Initialize bIsLoggedIn and ResponseCode here
+	bIsLoggedIn = false;
+	ResponseCode = 0; // Assuming ResponseCode is an integer
 }
 
 
@@ -11,30 +17,22 @@ void ACGoogleLoginActor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	bIsLoggedIn = false; // 로그인 여부 초기화
 }
+
+/**
+*
+*/
 
 void ACGoogleLoginActor::CheckLoginStatus()
 {
 	// 로그인 상태 확인 로직 구현
-	bool bLoginCompleted = false; // 로그인이 완료되었는지 여부를 서버에서 가져온다고 가정
+	FString TableCheckUrl = "http://hitup.shop:8000/login/tablecheck/" + RandomValue;
 
-	if (!bIsLoggedIn)
-	{
-		FString TableCheckUrl = "http://hitup.shop:8000/login/tablecheck/" + RandomValue;
+	// Send an HTTP request to check the table with the random number
+	SendHttpRequest(TableCheckUrl, TEXT("GET"), TEXT(""));
 
-		// Send an HTTP request to check the table with the random number
-		SendHttpRequest(TableCheckUrl, TEXT("GET"), TEXT(""));
-
-	}
-
-	if (bLoginCompleted)
-	{
-		// 로그인이 완료되면 타이머 중지
-		StopLoginCheckTimer();
-
-		// 로그인 완료 처리
-		HandleLoginResponse(true, ResponseCode);
-	}
+	StartLoginCheckTimer();
 }
 
 
@@ -43,8 +41,6 @@ void ACGoogleLoginActor::OpenChromeBrowser(const FString& URL)
 	if (!bIsLoggedIn)
 	{
 		FPlatformProcess::LaunchURL(*URL, nullptr, nullptr);
-		// 로그인 체크 타이머 시작
-		StartLoginCheckTimer();
 	}
 }
 
@@ -90,8 +86,31 @@ void ACGoogleLoginActor::HandleLoginResponse(bool bSuccess, int32 Code)
 	else
 	{
 		// 로그인 실패
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Login Failed this is HandleLoginResponse"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Login Failed"));
 	}
+
+	// 로그인이 성공했을 때의 처리
+	if (bSuccess)
+	{
+		// 로그인 성공 시에만 로그인 상태를 변경합니다.
+		bIsLoggedIn = true;
+
+		// 다음 레벨로 이동하거나 특정 위젯을 표시하는 등의 작업을 수행
+		TSubclassOf<UUserWidget> GameStartWidgetClass = LoadClass<UObject>(nullptr, TEXT("/Game/HitUP/Widgets/Loading/WB_Loading.WB_Loading"));
+		if (GameStartWidgetClass)
+		{
+			UUserWidget* GameStartWidget = CreateWidget<UUserWidget>(GetWorld(), GameStartWidgetClass);
+			// Add the widget to viewport
+			GameStartWidget->AddToViewport();
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Failed to load Game Start Widget"));
+		}
+	}
+
+	// 타이머 중지
+	GetWorldTimerManager().ClearTimer(LoginCheckTimerHandle);
 
 
 
@@ -129,45 +148,45 @@ void ACGoogleLoginActor::SendHttpRequest(const FString& Url, const FString& Verb
 	Request->OnProcessRequestComplete().BindUObject(this, &ACGoogleLoginActor::HandleGoogleLoginResponse);
 	Request->ProcessRequest();
 	Request->GetResponse();
-	
+
 }
 
 
 // HTTP 요청과 응답을 처리하여 서버와의 통신 결과를 확인하는 역할
 void ACGoogleLoginActor::HandleGoogleLoginResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
-	//int32 Responsecodes = Response->GetResponseCode();
-	ResponseCode = Response->GetResponseCode();
-	ResponseBody = Response->GetContentAsString();
-
-	if (bWasSuccessful && Response.IsValid() && ResponseCode == EHttpResponseCodes::Ok)
+	if (bWasSuccessful && Response.IsValid() && Response->GetResponseCode() == EHttpResponseCodes::Ok)
 	{
-		/*FString ResponseDatas = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("HTTP Response: %s"), *ResponseDatas);*/
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Login Success"));
-		//UE_LOG(LogTemp, Warning, TEXT("ResponseCode: %s"), ResponseBody);
+		FString ResponseData = Response->GetContentAsString();
 
-		
-		// If login is successful, add logic to open a specific widget or move to the next level.
-		HandleLoginResponse(true, ResponseCode);
+
+		// JSON 파싱
+		//TSharedRef<TJsonReader<TCHAR>> Reader = TJsonReaderFactory<TCHAR>::Create("");
+		TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>(ResponseData);
+
+		if (JsonObject.IsValid())
+		{
+			// 로그인 성공 여부 확인
+			bool bIsLoggedIn = true;
+			int32 ResponseCode = JsonObject->GetIntegerField("code");
+
+			HandleLoginResponse(bIsLoggedIn, ResponseCode);
+		}
+		else
+		{
+			// JSON 파싱 오류 처리
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("JSON Parsing Error"));
+		}
 	}
 	else
 	{
+		// 로그인 실패
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Login Failed"));
-		// When login fails, the failure message is displayed as a floating widget.
-		//TSubclassOf<UUserWidget> LoginFailedWidgetClass = LoadClass<UUserWidget>(nullptr, TEXT(""));
-		//if (LoginFailedWidgetClass)
-		//{
-			//UUserWidget* LoginFailedWidget = CreateWidget<UUserWidget>(GetWorld(), LoginFailedWidgetClass);
-			// Add a widget to a specific location.
-			//LoginFailedWidget->AddToViewport();
-		//}
-		//else
-		//{
-			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Failed to load Login Failed Widget"));
-		//}
 	}
 }
+
+
+
 
 void ACGoogleLoginActor::OnGoogleLoginButtonClicked()
 {
@@ -198,7 +217,7 @@ void ACGoogleLoginActor::StartLoginCheckTimer()
 {
 	// 로그인 상태 확인을 위한 타이머 시작
 	GetWorldTimerManager().SetTimer(LoginCheckTimerHandle, this, &ACGoogleLoginActor::CheckLoginStatus, 1.0f, true);
-	
+
 }
 
 void ACGoogleLoginActor::StopLoginCheckTimer()

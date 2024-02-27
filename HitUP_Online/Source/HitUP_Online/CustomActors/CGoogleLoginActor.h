@@ -9,55 +9,39 @@ UCLASS()
 class HITUP_API ACGoogleLoginActor : public AActor
 {
 	GENERATED_BODY()
-
+    
 public:
-	// Sets default values for this actor's properties
-	ACGoogleLoginActor();
-
-public:
-	// Google 로그인 버튼 클릭 시 호출되는 함수
-	UFUNCTION(BlueprintCallable)
-	void OnGoogleLoginButtonClicked();
-
-	UFUNCTION(BlueprintCallable)
-	void StartLoginCheckTimer();
-
-	UFUNCTION(BlueprintCallable)
-	void StopLoginCheckTimer();
+    ACGoogleLoginActor();
 
 protected:
-	virtual void BeginPlay() override;
+    virtual void BeginPlay() override;
+    virtual void Tick(float DeltaTime) override; // Tick 함수 선언
+
+public:
+    UFUNCTION(BlueprintCallable)
+    void OnGoogleLoginButtonClicked();
 
 private:
-	void CheckLoginStatus();
+    void OpenChromeBrowser(const FString& URL);
+    void OnBrowserClosed(const FString& URL);
+    void HandleLoginResponse(bool bSuccess, int32 Code);
+    FString GenerateRandomString(int32 Length);
+    void SendHttpRequest(const FString& URL, const FString& Verb, const FString& Content);
+    void HandleGoogleLoginResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+    void CheckTableCode(const FString& Url, const FString& Content);
+    void HandleTableCodeResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+    void CheckTableCodePeriodically(); // 주기적으로 Tablecheck 확인하는 함수
 
-	// HTTP 요청 함수
-	void SendHttpRequest(const FString& Url, const FString& Verb, const FString& Content);
+private:
+    FString RandomValue;
+    bool bIsLoggedIn;
+    int32 ResponseCode;
 
-	// Google 로그인 요청 처리 함수
-	void HandleGoogleLoginResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+    FHttpModule* HttpModule;
+    FTimerHandle LoginCheckTimerHandle; // 타이머 핸들
 
-	// 크롬 브라우저 열기
-	void OpenChromeBrowser(const FString& URL);
-
-	void HandleLoginResponse(bool bSuccess, int32 Code);
-
-	// 난수 생성 함수
-	FString GenerateRandomString(int32 Length);
-
-	FTimerHandle LoginCheckTimerHandle;
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIsLoggedIn; // 사용자의 로그인 상태를 나타내는 변수
-
-	// 로그인 성공 응답 코드 추출 (예: 200)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ResponseCode;
-
-public:
-	FString RandomValue;
-
-
-	FString ResponseBody;
+    // Tablecheck 주기적 확인을 위한 변수
+    bool bIsCheckingTableCode;
+    FString LastTableCheckUrl;
+	
 };

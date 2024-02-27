@@ -33,12 +33,14 @@ public class HitUP : ModuleRules
         PrivateDependencyModuleNames.Add("Json");
         PrivateDependencyModuleNames.Add("JsonUtilities");
         PrivateDependencyModuleNames.Add("OnlineSubsystem");
+       
 
 
         //Controller for AI
         PublicDependencyModuleNames.Add("AIModule");
         PublicDependencyModuleNames.Add("GameplayTasks");
         PublicDependencyModuleNames.Add("NavigationSystem");
+        PublicDependencyModuleNames.Add("WebBrowser");
 
         PublicDependencyModuleNames.Add("ProceduralMeshComponent");
 

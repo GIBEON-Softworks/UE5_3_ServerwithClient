@@ -20,7 +20,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "My GameMode")
 	TSubclassOf<UUserWidget> Level2StartWidgetClass; // ingame level start widget
-
+	
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
@@ -41,6 +41,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
 	void ClickJoin(const FString& token, const int32 click_Point);
 
+	UFUNCTION(BlueprintCallable, Category = "UMG_GAME")
+	void CallRank();
+
+
 private:
 	// Login 요청
 	void LoginOnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
@@ -48,8 +52,8 @@ private:
 	void JoinOnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
 	// click 요청
 	void ClickOnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
-
-	FString HashString(const FString& InputString);
+	// Rank 요청
+	void RankOnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
 
 	static void ChangeLevel(const FString& LevelName, UWorld* World);
 
@@ -64,9 +68,13 @@ protected:
 	UPROPERTY()
 	UUserWidget* CurrentWidget;
 
+	UPROPERTY()
+	FString my_token; // token을 저장할 공간
+
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	FString TransferLevelName;
+
 };
 
 

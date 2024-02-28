@@ -22,6 +22,7 @@
 
 #include "GenericPlatform/GenericPlatformMisc.h"
 
+#include "Widgets/BP_HipUpGameInstance.h"
 
 AHitUPGameMode::AHitUPGameMode()
 {
@@ -120,7 +121,8 @@ void AHitUPGameMode::CalledWeb()
 void AHitUPGameMode::CallLogin(const FString& Id, const FString& Password)
 {
 	//FString Url = TEXT("http://192.168.0.118:8000/jun/test/7");
-	FString Url = TEXT("http://hitup.shop:8000/api/signin");
+	//FString Url = TEXT("http://hitup.shop:8000/api/signin");
+	FString Url = TEXT("https://hitup.shop/api/signin");
 
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
 	JsonObject->SetStringField(TEXT("id"), Id);
@@ -161,7 +163,8 @@ void AHitUPGameMode::CallLogin(const FString& Id, const FString& Password)
 
 void AHitUPGameMode::CallJoin(const FString& Id, const FString& email, const FString& Password)
 {
-	FString Url = TEXT("http://hitup.shop:8000/api/signup");
+	//FString Url = TEXT("http://hitup.shop:8000/api/signup");
+	FString Url = TEXT("https://hitup.shop/api/signup");
 
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
 	JsonObject->SetStringField(TEXT("id"), Id);
@@ -202,7 +205,8 @@ void AHitUPGameMode::CallJoin(const FString& Id, const FString& email, const FSt
 
 void AHitUPGameMode::ClickJoin(const FString& token, const int32 click_Point)
 {
-	FString Url = TEXT("http://hitup.shop:8000/api/click/up");
+	//FString Url = TEXT("http://hitup.shop:8000/api/click/up");
+	FString Url = TEXT("https://hitup.shop/api/click/up");
 
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
 	//JsonObject->SetStringField(TEXT("id"), click_Point);
@@ -218,10 +222,14 @@ void AHitUPGameMode::ClickJoin(const FString& token, const int32 click_Point)
 	HttpRequest->SetVerb("POST");
 	HttpRequest->SetURL(Url);
 
+	UBP_HipUpGameInstance* GameInstance = Cast<UBP_HipUpGameInstance>(GetGameInstance());
+
 	// 헤더의 토큰 추가						Bearer + "token"
-	FString AuthorizationHeaderValue = TEXT("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA4NzczNjY0LCJpYXQiOjE3MDg2ODcyNjQsImp0aSI6ImY1ZDY4NDQ1M2FlZTQ2ZjQ4MDU3NjZmNGFkNGNiNmFhIiwidWlkIjoyfQ.n3-rIpVUe84zF1ckFeFTISyDPNwHNEy3gWco5qYqvY8");
+	//FString AuthorizationHeaderValue = TEXT("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA4NzczNjY0LCJpYXQiOjE3MDg2ODcyNjQsImp0aSI6ImY1ZDY4NDQ1M2FlZTQ2ZjQ4MDU3NjZmNGFkNGNiNmFhIiwidWlkIjoyfQ.n3-rIpVUe84zF1ckFeFTISyDPNwHNEy3gWco5qYqvY8");
+	FString AuthorizationHeaderValue = TEXT("Bearer " + GameInstance->LoadData());
+	//HttpRequest->SetHeader(TEXT("Authorization"), AuthorizationHeaderValue);
 	HttpRequest->SetHeader(TEXT("Authorization"), AuthorizationHeaderValue);
-	
+
 	HttpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
 	HttpRequest->SetContentAsString(JsonData);
 
@@ -245,7 +253,6 @@ void AHitUPGameMode::ClickJoin(const FString& token, const int32 click_Point)
 	//}
 }
 
-
 // HTTP Log요청 완료 시 호출되는 콜백 함수
 void AHitUPGameMode::LoginOnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess)
 {
@@ -259,20 +266,27 @@ void AHitUPGameMode::LoginOnHttpRequestComplete(FHttpRequestPtr Request, FHttpRe
 		
 		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			//TSharedPtr<FJsonObject> ResultObject = JsonObject->GetObjectField(TEXT("result"));
+			TSharedPtr<FJsonObject> ResultObject = JsonObject->GetObjectField(TEXT("result"));		
 
-			//if (ResultObject.IsValid())
-			//{
-			//	// "token" 필드 값을 추출
-			//	FString Token;
+			if (ResultObject->HasField("token"))
+			{
+				// "token" 값을 넣을 변수 가져오기
+				UBP_HipUpGameInstance* GameInstance = Cast<UBP_HipUpGameInstance>(GetGameInstance());
+				
+				//GameInstance = Cast<UBP_HipUpGameInstance>(GetGameInstance());
 
-			//	if (ResultObject->TryGetStringField(TEXT("token"), Token))
-			//	{
-			//		// 추출한 토큰 값 출력 또는 필요한 작업 수행
-			//		GEngine->AddOnScreenDebugMessage(-10, 10.0f, FColor::Blue, *Token);
-			//	}
-			//}
-
+				if (GameInstance)
+				{
+					GameInstance->saveToken(ResultObject->GetStringField("token"));
+					
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Null GameInstance"));
+				}
+				//my_token = ResultObject->GetStringField("token");
+			}
+			
 			// 데이터 담기
 			int32 Code = JsonObject->GetNumberField("code");
 			UWorld* World = GetWorld();
@@ -312,7 +326,7 @@ void AHitUPGameMode::LoginOnHttpRequestComplete(FHttpRequestPtr Request, FHttpRe
 		{
 			// 연결이 안됐을때, 
 			// 1. 파싱해서 오류 메세지를 출력 한다
-			GEngine->AddOnScreenDebugMessage(-10, 2.0f, FColor::Red, ResponseData);
+			GEngine->AddOnScreenDebugMessage(-10, 10.0f, FColor::Red, ResponseData);
 		}
 	}
 	else
@@ -321,6 +335,45 @@ void AHitUPGameMode::LoginOnHttpRequestComplete(FHttpRequestPtr Request, FHttpRe
 		//UE_LOG(LogTemp, Error, TEXT("HTTP Request failed"));
 		GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Red, TEXT("HTTP Request failed"));
 	}
+}
+
+
+void AHitUPGameMode::CallRank()
+{
+	//FString Url = TEXT("http://hitup.shop:8000/api/signup");
+	FString Url = TEXT("https://hitup.shop/api/click/ranking/10");
+
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
+
+	FString JsonData;
+	TSharedRef<TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&JsonData);
+	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
+
+	// HTTP 요청 객체 생성
+	TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
+	HttpRequest->SetVerb("POST");
+	HttpRequest->SetURL(Url);
+	HttpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+	HttpRequest->SetContentAsString(JsonData);
+
+	// 1. 로딩 창을 먼저 보여준다
+
+	// 요청 완료 후 호출될 콜백 함수 설정 ( 대기 )
+	HttpRequest->OnProcessRequestComplete().BindUObject(this, &AHitUPGameMode::RankOnHttpRequestComplete);
+
+	// 요청 보내기
+	HttpRequest->ProcessRequest();
+
+	// 요청 보내기 
+	//if (HttpRequest->ProcessRequest())
+	//{
+			// 요청 성공시
+			// GEngine->AddOnScreenDebugMessage(-3, 2.0f, FColor::Green, TEXT(" Post Call Web Browser"));
+	//}
+	//else
+	//{
+			// 요청 실패시
+	//}
 }
 
 // HTTP Join요청 완료 시 호출되는 콜백 함수
@@ -454,13 +507,70 @@ void AHitUPGameMode::ClickOnHttpRequestComplete(FHttpRequestPtr Request, FHttpRe
 	}
 }
 
+void AHitUPGameMode::RankOnHttpRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess)
+{
+	FString ResponseData = Response->GetContentAsString();
 
-FString AHitUPGameMode::HashString(const FString& InputString)
-{	
-	return "";
+	TSharedPtr<FJsonObject> JsonObject;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseData);
+
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		// "result" 필드가 있는지 확인
+		if (JsonObject->HasField("result"))
+		{
+			// "result" 필드의 배열 가져오기
+			TArray<TSharedPtr<FJsonValue>> ResultArray = JsonObject->GetArrayField("result");
+
+			UBP_HipUpGameInstance* GameInstance = Cast<UBP_HipUpGameInstance>(GetGameInstance());
+
+			// 각 필드의 배열 생성
+			TArray<int32> UserIds;
+			TArray<int32> ClickCounts;
+			TArray<int32> Ranks;
+
+			// 각 항목 순회하며 데이터 파싱 및 배열에 추가
+			for (const TSharedPtr<FJsonValue>& ResultItem : ResultArray)
+			{
+				TSharedPtr<FJsonObject> ResultObject = ResultItem->AsObject();
+				if (ResultObject.IsValid())
+				{
+					// 데이터 파싱
+					int32 UserId = ResultObject->GetIntegerField("user_id");
+					int32 ClickCount = ResultObject->GetIntegerField("click_cnt");
+					int32 Rank = ResultObject->GetIntegerField("rank");
+
+					// 배열에 추가
+					UserIds.Add(UserId);
+					ClickCounts.Add(ClickCount);
+					Ranks.Add(Rank);
+
+					GameInstance->vRank_data.Add(FString::Printf(TEXT("%d %d %d"), UserId, ClickCount, Rank));
+				}
+			}
+
+
+			// 데이터 출력
+			for (int32 Index = 0; Index < ResultArray.Num(); ++Index)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("User ID: %d, Click Count: %d, Rank: %d"),
+					UserIds[Index], ClickCounts[Index], Ranks[Index]);
+
+				UE_LOG(LogTemp, Warning, TEXT("Rank_Data : %s"), *GameInstance->vRank_data[Index]);
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("JSON 파싱 오류: 'result' 필드가 없습니다."));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("JSON 파싱 오류: 올바르지 않은 JSON 형식입니다."));
+	}
+
 }
-
-
 
 // 192.168.0.118
 

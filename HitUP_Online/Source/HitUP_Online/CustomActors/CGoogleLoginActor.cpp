@@ -3,6 +3,7 @@
 * Date of production : 240221 -> 240228(Fin)
 * this Game function : Google Login Actors
 */
+
 #include "CustomActors/CGoogleLoginActor.h"
 #include "Http.h"
 #include "Blueprint/UserWidget.h"
@@ -24,11 +25,9 @@ void ACGoogleLoginActor::BeginPlay()
 {
     Super::BeginPlay();
 
-
-    GetWorldTimerManager().SetTimer(LoginCheckTimerHandle, this, &ACGoogleLoginActor::CheckTableCodePeriodically, 5.0f, true);
 }
 
-// 버튼 클릭시
+// When UI Google Button Clicked
 void ACGoogleLoginActor::OnGoogleLoginButtonClicked()
 {
     if (!bIsLoggedIn)
@@ -66,6 +65,7 @@ void ACGoogleLoginActor::HandleLoginResponse(bool bSuccess, int32 Code)
         {
         case 2000:
             GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("Login Success"));
+            UE_LOG(LogTemp, Log, TEXT("Login Success : %d"), Code);
             ///Script/Engine.World'/Game/HitUP/Levels/Lv_MainGame_01.Lv_MainGame_01'
             MoveToNewLevel("Lv_MainGame_01");
             break;
@@ -178,14 +178,13 @@ void ACGoogleLoginActor::CheckTableCodePeriodically()
     GetWorldTimerManager().SetTimer(LoginCheckTimerHandle, this, &ACGoogleLoginActor::HandleCheckTableCodeTimer, 1.0f, true);
 }
 
-// 새로운 함수 추가: 타이머에 사용될 함수
+// 새로운 함수 추가: Check Success Login Timer
 void ACGoogleLoginActor::HandleCheckTableCodeTimer()
 {
     // 여기에 테이블 코드를 확인하는 로직을 추가합니다.
     //FString TableCheckUrl = "https://hitup.shop/google/login/tablecheck/" + RandomValue;
     CheckTableCode(LastTableCheckUrl, TEXT(""));
 }
-
 
 
 //난수 생성

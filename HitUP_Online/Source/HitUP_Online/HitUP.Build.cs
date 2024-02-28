@@ -40,7 +40,7 @@ public class HitUP : ModuleRules
         PublicDependencyModuleNames.Add("AIModule");
         PublicDependencyModuleNames.Add("GameplayTasks");
         PublicDependencyModuleNames.Add("NavigationSystem");
-        PublicDependencyModuleNames.Add("WebBrowser");
+        
 
         PublicDependencyModuleNames.Add("ProceduralMeshComponent");
 

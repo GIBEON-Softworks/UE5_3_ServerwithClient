@@ -26,7 +26,10 @@
 
 AHitUPGameMode::AHitUPGameMode()
 {
+
+			
 }
+
 
 void AHitUPGameMode::BeginPlay()
 {
@@ -100,10 +103,10 @@ void AHitUPGameMode::ChangeLevel(const FString& LevelName, UWorld* World)
 	// level 전환 매서드 - 최승우 
 	//							여기를 거쳐서 -> 다음 레벨로 이동 한다
 	
+	UGameplayStatics::OpenLevel(World, FName(*LevelName));
 	if (World)
 	{
 		// 레벨 전환 메서드
-		UGameplayStatics::OpenLevel(World, FName(*LevelName));
 	}
 	else
 	{
@@ -289,7 +292,7 @@ void AHitUPGameMode::LoginOnHttpRequestComplete(FHttpRequestPtr Request, FHttpRe
 			
 			// 데이터 담기
 			int32 Code = JsonObject->GetNumberField("code");
-			UWorld* World = GetWorld();
+			World = GetWorld();
 
 			// 2. 로딩 창 꺼주면서 ---> 레벨 이동
 			if (Code == 2000)
@@ -522,8 +525,9 @@ void AHitUPGameMode::RankOnHttpRequestComplete(FHttpRequestPtr Request, FHttpRes
 		{
 			// "result" 필드의 배열 가져오기
 			TArray<TSharedPtr<FJsonValue>> ResultArray = JsonObject->GetArrayField("result");
-
 			UBP_HipUpGameInstance* GameInstance = Cast<UBP_HipUpGameInstance>(GetGameInstance());
+			
+			GameInstance->vRank_data.Reset();
 
 			// 각 필드의 배열 생성
 			TArray<int32> UserIds;
@@ -546,10 +550,10 @@ void AHitUPGameMode::RankOnHttpRequestComplete(FHttpRequestPtr Request, FHttpRes
 					ClickCounts.Add(ClickCount);
 					Ranks.Add(Rank);
 
-					GameInstance->vRank_data.Add(FString::Printf(TEXT("%d %d %d"), UserId, ClickCount, Rank));
+					GameInstance->vRank_data.Add(FString::Printf(TEXT("user_id : %d click_cnt : %d rank : %d"), UserId, ClickCount, Rank));
 				}
 			}
-
+		
 
 			// 데이터 출력
 			for (int32 Index = 0; Index < ResultArray.Num(); ++Index)

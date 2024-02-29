@@ -5,7 +5,7 @@
 |---|---|---|
 |24.02.07| Unreal Client request Server[Cpp] | 언리얼 클라이언트 서버 로비 및 로그인 IP등 기본 포트 소켓통신|
 |24.02.14 - 24.02.15| Unreal Client UI | 기존 프로젝트 병합에 의한 bug fix 및 UI 결합 및 수정 | 
-
+|24.02.21 - 24.02.28| Unreal <-> Server Google Login with Basic Login & MakeAccount | 회원가입, 일반 로그인, 클릭 스코어, 랭킹 시스템, 구글 로그인 update |
 
 
 # UE5 사용시 주의 사항

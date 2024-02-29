@@ -14,6 +14,7 @@ class HITUP_API UBP_HipUpGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
+	UBP_HipUpGameInstance();
 
 public:
 	// 로그인시 저장될 토큰 데이터

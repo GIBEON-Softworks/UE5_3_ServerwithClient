@@ -13,6 +13,7 @@ class HITUP_API AHitUPGameMode : public AGameModeBase
 
 	AHitUPGameMode();
 
+
 public:
 	// 레벨별로 사용할 Start Widget 클래스
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "My GameMode")
@@ -74,6 +75,9 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	FString TransferLevelName;
+
+	UWorld* World;
+
 
 };
 

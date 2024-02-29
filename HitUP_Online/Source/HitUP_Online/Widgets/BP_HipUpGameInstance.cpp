@@ -5,6 +5,11 @@
 
 
 
+UBP_HipUpGameInstance::UBP_HipUpGameInstance()
+{
+
+}
+
 void UBP_HipUpGameInstance::saveToken(const FString& newToken)
 {
 	token = newToken;
